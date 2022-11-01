@@ -2,7 +2,7 @@ import * as React from "react";
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 
-const App = () => {
+const Index = () => {
   return (
     <View style={styles.container}>
       <Text>OneRep is being developed.</Text>
@@ -20,4 +20,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default App;
+export default Index;

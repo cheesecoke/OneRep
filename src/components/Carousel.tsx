@@ -12,8 +12,13 @@ const PRIMARY_COLOR = "#D1FAE5";
 const SECONDARY_COLOR = "#BAE6FD";
 const TERTIARY_COLOR = "#FED7AA";
 
+type ExercisesType = {
+  title: string;
+  total: number;
+};
+
 type Props = {
-  exercises: string[];
+  exercises: ExercisesType[];
   activeExercise: number;
   setActive: Function;
 };
@@ -66,7 +71,7 @@ const Carousel = ({ exercises, activeExercise, setActive }: Props) => {
                   activeExercise == index && styles.activeTitle,
                 ]}
               >
-                {item}
+                {item.title}
               </Text>
             </View>
           );

@@ -17,7 +17,7 @@ export default SectionHeading;
 const styles = StyleSheet.create({
   container: {
     marginLeft: 20,
-    marginBottom: 10,
+    marginBottom: 20,
   },
   text: {
     fontSize: 16,

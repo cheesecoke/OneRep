@@ -1,7 +1,10 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, SafeAreaView } from "react-native";
-import { SectionHeading, CarouselSection } from "./src/components";
+import { HomeScreen, AllExercisesScreen, LoginScreen } from "./src/pages";
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 const globalStyle = require("./src/styles/global");
+const Stack = createNativeStackNavigator();
 
 const data = [
   {
@@ -22,8 +25,17 @@ const App = () => {
 
   return (
     <SafeAreaView style={[globalStyle.globalStyles, styles.container]}>
-      <SectionHeading>Quick Add</SectionHeading>
-      <CarouselSection exercises={exercises} />
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="OneRep">
+          <Stack.Screen name="OneRep">
+            {(props) => <HomeScreen {...props} exercises={exercises} />}
+          </Stack.Screen>
+          <Stack.Screen name="All Exercises">
+            {(props) => <AllExercisesScreen {...props} exercises={exercises} />}
+          </Stack.Screen>
+          <Stack.Screen name="Login" component={LoginScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
       <StatusBar style="auto" />
     </SafeAreaView>
   );
@@ -36,5 +48,13 @@ const styles = StyleSheet.create({
     border: "1px solid green",
   },
 });
+
+//TODO:
+// User db
+// Login
+// Privacy Policy
+// Logo
+// User page
+// Settings
 
 export default App;

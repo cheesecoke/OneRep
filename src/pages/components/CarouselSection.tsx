@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { Carousel } from "./";
+import { Carousel } from ".";
 
 type Props = {
   exercises: [];

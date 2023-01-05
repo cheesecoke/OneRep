@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet } from "react-native";
 
 type Props = {
-  children: string;
+  children: any;
 };
 
 const SectionHeading = ({ children }: Props) => {
@@ -18,6 +18,7 @@ const styles = StyleSheet.create({
   container: {
     marginLeft: 20,
     marginBottom: 20,
+    marginTop: 20,
   },
   text: {
     fontSize: 16,

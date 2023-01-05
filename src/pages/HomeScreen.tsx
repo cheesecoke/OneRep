@@ -1,35 +1,35 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
-import { SectionHeading, CarouselSection, HomeChart } from "./components";
-// Dummy Data
+import { SectionHeading, QuickAdd, Chart } from "./components";
+import { getDomainForChart } from "../utils/getChartDomain";
+import { Exercises, Navigation } from "../Types";
 import data from "../api/data.json";
-const exercises = data.users[1].exercises;
 const getMonth = new Date().getMonth();
 const month = data.month[getMonth];
 
-interface Navigation {
-  navigate: Function;
-}
-
-interface Exercises {
-  map(arg0: (exercise: { total: Number }) => Number): unknown;
-  slice(arg0: number, arg1: number): unknown;
-  exercise: { title: string; total: number };
-}
-
-interface PropsType {
+interface PropTypes {
   exercises: Exercises;
   navigation: Navigation;
   month: String;
 }
 
-const HomeScreen = ({ navigation }: PropsType) => {
+const HomeScreen = ({ navigation, exercises }: PropTypes) => {
+  const topFour = exercises.slice(0, 4) as Exercises;
+  const { highest, lowest } = getDomainForChart(exercises);
+
   return (
     <View style={styles.container}>
       <SectionHeading>Quick Add</SectionHeading>
-      <CarouselSection exercises={exercises} />
+      <QuickAdd exercises={exercises} />
       <SectionHeading>Top of {month}</SectionHeading>
-      <HomeChart navigation={navigation} exercises={exercises} />
+      <Chart
+        navigation={navigation}
+        exercises={topFour}
+        highest={highest}
+        lowest={lowest}
+        tab="Exercises"
+        link="Exercises"
+      />
     </View>
   );
 };

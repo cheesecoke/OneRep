@@ -9,7 +9,11 @@
     "web": "export NODE_OPTIONS=--openssl-legacy-provider && expo start --web"
   },
   "dependencies": {
+    "@emotion/react": "^11.10.5",
+    "@emotion/styled": "^11.10.5",
     "@expo/webpack-config": "^0.17.0",
+    "@mui/icons-material": "^5.11.0",
+    "@mui/material": "^5.11.3",
     "@react-navigation/native": "^6.1.1",
     "@react-navigation/native-stack": "^6.9.7",
     "expo": "~46.0.16",

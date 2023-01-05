@@ -7,12 +7,23 @@ import {
   View,
 } from "react-native";
 import { Carousel } from ".";
+// Dummy Data
+import data from "../../api/data.json";
+const getMonth = new Date().getMonth();
+const month = data.month[getMonth];
 
-type Props = {
-  exercises: [];
-};
+interface Exercises {
+  map(arg0: (exercise: { total: Number }) => Number): unknown;
+  slice(arg0: number, arg1: number): unknown;
+  exercise: { title: string; total: keyof typeof Number };
+}
 
-const CarouselSection = ({ exercises }: Props) => {
+interface PropType {
+  exercises: Exercises;
+  month: String;
+}
+
+const CarouselSection = ({ exercises }: PropType) => {
   const [activeExercise, setActive] = useState(0);
   const [reps, setReps] = useState(0);
   const [error, setError] = useState(false);
@@ -47,11 +58,6 @@ const CarouselSection = ({ exercises }: Props) => {
         exercises={exercises}
       />
       <View style={styles.section}>
-        {error && (
-          <Text style={styles.errorText}>
-            Please, enter a <i>number</i> greater than 0.
-          </Text>
-        )}
         <TextInput
           style={[
             styles.input,
@@ -63,6 +69,16 @@ const CarouselSection = ({ exercises }: Props) => {
           placeholder="Enter number of reps."
         />
 
+        {error ? (
+          <Text style={[styles.subText, styles.errorText]}>
+            Please, enter a <i>number</i> greater than 0.
+          </Text>
+        ) : (
+          <Text style={[styles.subText, styles.total]}>
+            Total {title} for {month}: {total}
+          </Text>
+        )}
+
         <TouchableOpacity
           style={styles.button}
           onPress={() => handleSubmit(reps)}
@@ -70,9 +86,6 @@ const CarouselSection = ({ exercises }: Props) => {
         >
           <Text style={styles.submit}>Submit</Text>
         </TouchableOpacity>
-        <Text style={styles.total}>
-          Total {title}: {total}
-        </Text>
       </View>
     </>
   );
@@ -83,7 +96,7 @@ const styles = StyleSheet.create({
     height: 50,
     borderWidth: 1,
     padding: 10,
-    marginBottom: 20,
+    marginBottom: 5,
     borderRadius: 10,
   },
   carousel: {
@@ -99,16 +112,19 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     backgroundColor: "#BAE6FD",
     borderRadius: 10,
-    marginBottom: 10,
   },
   submit: {
     fontSize: 16,
     fontWeight: 700,
     color: "#737373",
   },
-  total: {
+  subText: {
+    marginBottom: 15,
     fontSize: 12,
+  },
+  total: {
     fontStyle: "italic",
+    color: "#737373",
   },
   inputError: {
     borderColor: "red",
@@ -120,7 +136,6 @@ const styles = StyleSheet.create({
   },
   errorText: {
     color: "red",
-    marginBottom: 5,
   },
 });
 

@@ -1,7 +1,6 @@
 import React from "react";
 import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
 import { VictoryBar, VictoryChart, VictoryTheme, VictoryAxis } from "victory";
-import ExercisesScreen from "../ExercisesScreen";
 
 interface Exercises {
   map(arg0: (exercise: { total: Number }) => Number): unknown;
@@ -15,20 +14,27 @@ interface Navigation {
 
 interface PropTypes {
   exercises: Exercises;
-  navigation: Navigation;
+  tab?: String;
+  link?: String;
+  navigation?: Navigation;
+  highest?: Number;
+  lowest?: Number;
 }
 
-const HomeChart = ({ navigation, exercises }: PropTypes) => {
-  const topFour = exercises.slice(0, 4) as Exercises;
-  const totals = topFour.map((exercise: { total: Number }) => exercise.total);
-  const getHighestCount = Math.max(...totals);
-  const getLowestCount = Math.min(...totals);
-
+const Chart = ({
+  navigation,
+  exercises,
+  lowest,
+  highest,
+  tab,
+  link,
+}: PropTypes) => {
+  console.log(lowest);
   return (
     <TouchableOpacity
       style={styles.chart}
       onPress={() => {
-        navigation.navigate("Exercises");
+        navigation.navigate(`${link}`);
       }}
     >
       <VictoryChart
@@ -40,7 +46,7 @@ const HomeChart = ({ navigation, exercises }: PropTypes) => {
         theme={VictoryTheme.material}
         domainPadding={30}
         domain={{
-          y: [getLowestCount, getHighestCount == 0 ? 10 : getHighestCount],
+          y: [lowest, highest == 0 ? 10 : highest],
         }}
       >
         <VictoryAxis
@@ -57,23 +63,25 @@ const HomeChart = ({ navigation, exercises }: PropTypes) => {
         />
         <VictoryBar
           style={{ data: { fill: "#FED7AA", width: 32 } }}
-          data={topFour}
+          data={exercises}
           x="title"
           y="total"
         />
       </VictoryChart>
-      <View style={styles.tabContainer}>
-        <View style={[styles.top, styles.tabBorder]}>
-          <View style={[styles.topCurve, styles.tabBorderCurve]} />
+      {tab && (
+        <View style={styles.tabContainer}>
+          <View style={[styles.top, styles.tabBorder]}>
+            <View style={[styles.topCurve, styles.tabBorderCurve]} />
+          </View>
+          <View style={styles.tabMiddle}>
+            <Text>Exercises</Text>
+          </View>
+          <View style={[styles.bottom, styles.tabBorder]}>
+            <View style={[styles.bottomCurve, styles.tabBorderCurve]} />
+          </View>
+          <View />
         </View>
-        <View style={styles.tabMiddle}>
-          <Text>Exercises</Text>
-        </View>
-        <View style={[styles.bottom, styles.tabBorder]}>
-          <View style={[styles.bottomCurve, styles.tabBorderCurve]} />
-        </View>
-        <View />
-      </View>
+      )}
     </TouchableOpacity>
   );
 };
@@ -140,4 +148,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default HomeChart;
+export default Chart;

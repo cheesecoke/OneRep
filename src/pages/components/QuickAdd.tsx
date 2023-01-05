@@ -23,7 +23,7 @@ interface PropType {
   month: String;
 }
 
-const CarouselSection = ({ exercises }: PropType) => {
+const QuickAdd = ({ exercises }: PropType) => {
   const [activeExercise, setActive] = useState(0);
   const [reps, setReps] = useState(0);
   const [error, setError] = useState(false);
@@ -139,4 +139,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CarouselSection;
+export default QuickAdd;

@@ -57,9 +57,9 @@ const Carousel = ({ exercises, activeExercise, setActive }: Props) => {
                     styles.card,
                     activeExercise == index && styles.active,
                     index === 0 && styles.firstItem,
-                    (index === 0 || index === 3) && styles.primary,
-                    (index === 1 || index === 4) && styles.secondary,
-                    index === 2 && styles.third,
+                    index % 3 == 0 && styles.primary,
+                    index % 3 == 1 && styles.secondary,
+                    index % 3 == 2 && styles.third,
                   ]}
                 >
                   {/* {item} Image - monkey? */}

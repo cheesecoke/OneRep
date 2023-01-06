@@ -4,9 +4,10 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import {
   View,
   StyleSheet,
-  FlatList,
+  VirtualizedList,
   TouchableOpacity,
   Text,
+  ListRenderItemInfo,
 } from "react-native";
 import { getDomainForChart } from "../utils/getChartDomain";
 import { Exercises, Navigation } from "../Types";
@@ -17,46 +18,55 @@ const SECONDARY_COLOR = "#BAE6FD";
 const TERTIARY_COLOR = "#FED7AA";
 const exercises = data.users[1].exercises;
 
+interface ExerciseType {
+  title: String;
+  total: Number;
+}
+
+interface ExercisesType {
+  exercise: ExerciseType;
+}
+
+interface ListTypes {
+  exercises: ExercisesType;
+  navigation: Navigation;
+}
+
+interface ItemComponentType {
+  item: ItemType;
+  onPress: () => void;
+  itemIndex: number;
+}
+
+interface ItemType {
+  // title?: string;
+  index: number;
+  item: { title: String };
+  separators: {
+    highlight: Function;
+    unhighlight: Function;
+    updateProps: Function;
+  };
+}
+
 interface ExercisesScreenTypes {
   exercises: Exercises;
   navigation: Navigation;
 }
 
-interface ExerciseListTypes {
-  exercises: Exercises;
-  navigation: Navigation;
-}
-
-interface ItemType {
-  title: string;
-  item: Element;
-  backgroundColor?: String;
-  textColor?: String;
-  onPress: () => void;
-  lastItem: String;
-  itemIndex: number;
-}
-
-const Item = ({
-  item,
-  onPress,
-  backgroundColor,
-  textColor,
-  itemIndex,
-}: ItemType) => {
+const Item = ({ item, onPress, itemIndex }: ItemComponentType) => {
   const lastItem = exercises[exercises.length - 1].title;
   const firstItem = exercises[0].title;
 
-  console.log(itemIndex % 3);
+  console.log(lastItem, item.item);
 
   return (
     <TouchableOpacity
       onPress={onPress}
       style={[
         styles.item,
-        backgroundColor,
-        lastItem === item.title && styles.lastItem,
-        firstItem === item.title && styles.firstItem,
+        lastItem === item.item && styles.lastItem,
+        firstItem === item.item && styles.firstItem,
       ]}
     >
       <View
@@ -69,37 +79,37 @@ const Item = ({
       >
         {itemIndex + 1}
       </View>
-      <Text style={[styles.itemText, textColor]}>{item.title}</Text>
+      <Text style={[styles.itemText]}>{item.item}</Text>
       <ArrowForwardIosIcon style={styles.arrowIcon} />
     </TouchableOpacity>
   );
 };
 
-const ExerciseList = ({ exercises, navigation }: ExerciseListTypes) => {
-  const renderItem = ({ item, index }) => {
-    console.log(item, index + 1);
-    const color = "#333";
+const ExerciseList = ({ exercises, navigation }: ListTypes) => {
+  const renderItem = (item: ItemType) => {
+    console.log("render", item, item.index + 1);
 
     return (
       <Item
         item={item}
         onPress={() => {
-          navigation.navigate(`${item.title}`);
+          navigation.navigate(`${item.item}`);
           // TODO: exercise/pushups
         }}
-        itemIndex={index}
-        textColor={{ color }}
+        itemIndex={item.index}
       />
     );
   };
 
   return (
-    <FlatList
+    <VirtualizedList
       data={exercises}
-      renderItem={(item: { item: ItemType; index: number }, index: number) =>
-        renderItem(item, index)
-      }
-      keyExtractor={(item) => item.title}
+      renderItem={(exercise) => renderItem(exercise)}
+      keyExtractor={(item: ItemType) => {
+        console.log("key", item);
+      }}
+      getItemCount={(exercises) => exercises.length}
+      getItem={(exercises, index) => exercises[index].title}
     />
   );
 };

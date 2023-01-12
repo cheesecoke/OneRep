@@ -32,7 +32,6 @@ const QuickAdd = ({ exercises }: PropType) => {
   const handleSubmit = (reps: number) => {
     if (!error && reps > 0) {
       // API calls.
-      console.log("Submitted", reps);
     }
   };
 
@@ -115,7 +114,7 @@ const styles = StyleSheet.create({
   },
   submit: {
     fontSize: 16,
-    fontWeight: 700,
+    fontWeight: "bold",
     color: "#737373",
   },
   subText: {

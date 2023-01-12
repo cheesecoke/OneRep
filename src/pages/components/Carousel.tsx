@@ -92,12 +92,13 @@ const styles = StyleSheet.create({
     width: CARD_WIDTH_HEIGHT,
     height: CARD_WIDTH_HEIGHT,
     borderRadius: 25,
+    overflow: "hidden",
     marginTop: 10,
     transition: "all .2s ease-in-out",
     boxShadow: "0px 2px 4px 0px #00000040",
   },
   active: {
-    transform: "scale(1.05)",
+    transform: [{ scale: 1.1 }],
   },
   firstItem: {
     marginLeft: 20,

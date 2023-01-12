@@ -1,36 +1,23 @@
 import React from "react";
 import { SectionHeading, Chart } from "./components";
-import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+// import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+
+import Icon from "@expo/vector-icons/MaterialIcons";
 import {
   View,
   StyleSheet,
   VirtualizedList,
   TouchableOpacity,
   Text,
-  ListRenderItemInfo,
 } from "react-native";
 import { getDomainForChart } from "../utils/getChartDomain";
-import { Exercises, Navigation } from "../Types";
+import { ExercisesType, NavigationType } from "../Types";
 // Dummy Data
 import data from "../api/data.json";
+const exercises = data.users[1].exercises;
 const PRIMARY_COLOR = "#D1FAE5";
 const SECONDARY_COLOR = "#BAE6FD";
 const TERTIARY_COLOR = "#FED7AA";
-const exercises = data.users[1].exercises;
-
-interface ExerciseType {
-  title: String;
-  total: Number;
-}
-
-interface ExercisesType {
-  exercise: ExerciseType;
-}
-
-interface ListTypes {
-  exercises: ExercisesType;
-  navigation: Navigation;
-}
 
 interface ItemComponentType {
   item: ItemType;
@@ -50,15 +37,13 @@ interface ItemType {
 }
 
 interface ExercisesScreenTypes {
-  exercises: Exercises;
-  navigation: Navigation;
+  exercises: ExercisesType;
+  navigation: NavigationType;
 }
 
 const Item = ({ item, onPress, itemIndex }: ItemComponentType) => {
   const lastItem = exercises[exercises.length - 1].title;
   const firstItem = exercises[0].title;
-
-  console.log(lastItem, item.item);
 
   return (
     <TouchableOpacity
@@ -77,56 +62,47 @@ const Item = ({ item, onPress, itemIndex }: ItemComponentType) => {
           itemIndex % 3 == 2 && styles.tertiary,
         ]}
       >
-        {itemIndex + 1}
+        <Text>{itemIndex + 1}</Text>
       </View>
-      <Text style={[styles.itemText]}>{item.item}</Text>
-      <ArrowForwardIosIcon style={styles.arrowIcon} />
+      <Text style={styles.itemText}>{item.item}</Text>
+      <Icon name="chevron-right" size={32} style={styles.icon} />
     </TouchableOpacity>
   );
 };
 
-const ExerciseList = ({ exercises, navigation }: ListTypes) => {
-  const renderItem = (item: ItemType) => {
-    console.log("render", item, item.index + 1);
+const ExercisesScreen = ({ navigation, exercises }: ExercisesScreenTypes) => {
+  const { highest, lowest } = getDomainForChart(exercises, "total");
 
+  const renderListItem = (item: ItemType) => {
     return (
       <Item
         item={item}
-        onPress={() => {
-          navigation.navigate(`${item.item}`);
-          // TODO: exercise/pushups
-        }}
+        onPress={() => navigation.navigate("Exercise", exercises[item.index])}
         itemIndex={item.index}
       />
     );
   };
 
   return (
-    <VirtualizedList
-      data={exercises}
-      renderItem={(exercise) => renderItem(exercise)}
-      keyExtractor={(item: ItemType) => {
-        console.log("key", item);
-      }}
-      getItemCount={(exercises) => exercises.length}
-      getItem={(exercises, index) => exercises[index].title}
-    />
-  );
-};
-
-const ExercisesScreen = ({ navigation, exercises }: ExercisesScreenTypes) => {
-  const { highest, lowest } = getDomainForChart(exercises);
-
-  return (
     <View style={styles.container}>
       <SectionHeading>This Month</SectionHeading>
-      <Chart
-        navigation={navigation}
-        exercises={exercises}
-        highest={highest}
-        lowest={lowest}
+      <VirtualizedList
+        ListHeaderComponent={
+          <Chart
+            navigation={navigation}
+            data={exercises}
+            highest={highest}
+            lowest={lowest}
+            xValue="title"
+            yValue="total"
+          />
+        }
+        data={exercises}
+        renderItem={(exercises) => renderListItem(exercises)}
+        keyExtractor={(item: ItemType) => item}
+        getItemCount={(exercises) => exercises.length}
+        getItem={(exercises, index) => exercises[index].title}
       />
-      <ExerciseList exercises={exercises} navigation={navigation} />
     </View>
   );
 };
@@ -161,13 +137,13 @@ const styles = StyleSheet.create({
   listNumber: {
     borderWidth: 2,
     borderColor: SECONDARY_COLOR, // Conditional
-    borderRadius: 30,
+    borderRadius: 15,
     height: 30,
     width: 30,
     alignItems: "center",
     justifyContent: "center",
   },
-  arrowIcon: {
+  icon: {
     display: "flex",
     color: "#c3c3c3",
     marginLeft: "auto",

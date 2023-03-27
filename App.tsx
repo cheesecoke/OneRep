@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, SafeAreaView, LogBox } from "react-native";
+import { StyleSheet, SafeAreaView, LogBox, Text } from "react-native";
 import {
   HomeScreen,
   ExercisesScreen,
@@ -8,7 +8,11 @@ import {
 } from "./src/pages";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-// import globalStyle from "./src/styles/global";
+import { Amplify } from "aws-amplify";
+import awsconfig from "./src/aws-exports";
+Amplify.configure(awsconfig);
+
+// Remove - import globalStyle from "./src/styles/global";
 const Stack = createNativeStackNavigator();
 LogBox.ignoreLogs(["Require cycle: node_modules/victory"]);
 
@@ -51,4 +55,5 @@ const styles = StyleSheet.create({
 // User page
 // Settings
 
+// export default withAuthenticator(App);
 export default App;

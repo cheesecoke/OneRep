@@ -19,11 +19,11 @@ type ExercisesType = {
 
 type Props = {
   exercises: ExercisesType[];
-  activeExercise: number;
-  setActive: Function;
+  activeIndex: number;
+  setActiveIndex: Function;
 };
 
-const Carousel = ({ exercises, activeExercise, setActive }: Props) => {
+const Carousel = ({ exercises, activeIndex, setActiveIndex }: Props) => {
   const [flatListRef, setFlatlistRef] = useState<Object | null>("");
 
   return (
@@ -49,13 +49,13 @@ const Carousel = ({ exercises, activeExercise, setActive }: Props) => {
                     index = 0;
                   }
 
-                  setActive(index);
+                  setActiveIndex(index);
                 }}
               >
                 <Text
                   style={[
                     styles.card,
-                    activeExercise == index && styles.active,
+                    activeIndex == index && styles.active,
                     index === 0 && styles.firstItem,
                     index % 3 == 0 && styles.primary,
                     index % 3 == 1 && styles.secondary,
@@ -68,7 +68,7 @@ const Carousel = ({ exercises, activeExercise, setActive }: Props) => {
               <Text
                 style={[
                   styles.title,
-                  activeExercise == index && styles.activeTitle,
+                  activeIndex == index && styles.activeTitle,
                 ]}
               >
                 {item.title}

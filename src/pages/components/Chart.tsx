@@ -31,7 +31,6 @@ const Chart = ({
   xValue,
   yValue,
 }: PropTypes) => {
-  console.log("Chart", { data });
   return (
     <TouchableOpacity
       style={styles.chart}

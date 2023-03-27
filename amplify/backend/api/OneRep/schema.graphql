@@ -1,0 +1,6 @@
+type Exercise @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  name: String
+  total: Int
+}
+ 

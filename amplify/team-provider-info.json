@@ -1,0 +1,23 @@
+{
+  "staging": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-onerep-staging-43246-authRole",
+      "UnauthRoleArn": "arn:aws:iam::042279144753:role/amplify-onerep-staging-43246-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::042279144753:role/amplify-onerep-staging-43246-authRole",
+      "Region": "us-west-2",
+      "DeploymentBucketName": "amplify-onerep-staging-43246-deployment",
+      "UnauthRoleName": "amplify-onerep-staging-43246-unauthRole",
+      "StackName": "amplify-onerep-staging-43246",
+      "StackId": "arn:aws:cloudformation:us-west-2:042279144753:stack/amplify-onerep-staging-43246/2a1f2e20-9232-11ed-bbcb-024be28c17c3",
+      "AmplifyAppId": "d2qle8y7r6xoc2"
+    },
+    "categories": {
+      "auth": {
+        "onerepee9efbb5": {}
+      },
+      "api": {
+        "OneRep": {}
+      }
+    }
+  }
+}

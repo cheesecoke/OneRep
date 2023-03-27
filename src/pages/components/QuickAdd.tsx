@@ -5,6 +5,7 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Alert,
 } from "react-native";
 import { Carousel } from ".";
 // Dummy Data
@@ -24,64 +25,73 @@ interface PropType {
 }
 
 const QuickAdd = ({ exercises }: PropType) => {
-  const [activeExercise, setActive] = useState(0);
-  const [reps, setReps] = useState(0);
-  const [error, setError] = useState(false);
-  const { title, total } = exercises[activeExercise];
+  const [activeIndex, setActiveIndex] = useState(0);
+  // const [error, setError] = useState(false);
+  const { title, total } = exercises[activeIndex];
+  const [input, setInput] = useState("");
+  const [history, setHistory] = useState("");
+  const [newTotal, setNewTotal] = useState(total);
 
-  const handleSubmit = (reps: number) => {
-    if (!error && reps > 0) {
-      // API calls.
-      console.log("Submitted", reps);
+  const handleSubmit = (input) => {
+    let newInput, newTotal;
+    const currentDate = new Date();
+
+    // Check if input field has a valid value
+    if (!(input > 0)) {
+      Alert.alert(
+        "Invalid Input",
+        "Please enter a number greater than 0 for at least one exercise"
+      );
+      return;
     }
+
+    // "entries": [
+    //   { "entered": 66, "date": "11/08/2022" },
+    //   { "entered": 10, "date": "11/08/2022" },
+    //   { "entered": 5, "date": "11/08/2022" }
+    // ]
+
+    // Push entry
+    // Add to total, push
+    console.log(typeof input);
+    if (input > 0) {
+      newInput = { entered: input, date: currentDate };
+      newTotal = total + parseInt(input, 10);
+      setInput("");
+    }
+
+    setHistory(newInput);
+    //push to db
+    setNewTotal(newTotal);
+    //push to db
   };
 
-  const handleChange = (e: Event) => {
-    const reg = new RegExp("^\\d+$");
-    const value = (e.target as HTMLInputElement).value;
-
-    //Errors
-    // world record of push ups.
-    if (reg.test(value) && value.charAt(0) !== "0") {
-      setReps(+value);
-      setError(false);
-    } else {
-      setError(true);
-    }
-  };
+  console.log({ history });
+  console.log({ newTotal });
 
   return (
     <>
       <Carousel
-        activeExercise={activeExercise}
-        setActive={setActive}
+        activeIndex={activeIndex}
+        setActiveIndex={setActiveIndex}
         exercises={exercises}
       />
       <View style={styles.section}>
         <TextInput
-          style={[
-            styles.input,
-            error ? styles.inputError : styles.inputFocused,
-          ]}
+          style={[styles.input]}
           keyboardType={"number-pad"}
-          onChange={(e) => handleChange(e)}
-          onSubmitEditing={() => handleSubmit(reps)}
+          onChangeText={setInput}
           placeholder="Enter number of reps."
+          value={input}
         />
 
-        {error ? (
-          <Text style={[styles.subText, styles.errorText]}>
-            Please, enter a <i>number</i> greater than 0.
-          </Text>
-        ) : (
-          <Text style={[styles.subText, styles.total]}>
-            Total {title} for {month}: {total}
-          </Text>
-        )}
+        <Text style={[styles.subText, styles.total]}>
+          Total {title} for {month}: {total}
+        </Text>
 
         <TouchableOpacity
           style={styles.button}
-          onPress={() => handleSubmit(reps)}
+          onPress={() => handleSubmit(input)}
           accessibilityLabel="Submit your number of reps"
         >
           <Text style={styles.submit}>Submit</Text>
@@ -115,7 +125,7 @@ const styles = StyleSheet.create({
   },
   submit: {
     fontSize: 16,
-    fontWeight: 700,
+    fontWeight: "bold",
     color: "#737373",
   },
   subText: {
@@ -125,17 +135,6 @@ const styles = StyleSheet.create({
   total: {
     fontStyle: "italic",
     color: "#737373",
-  },
-  inputError: {
-    borderColor: "red",
-    outlineColor: "red",
-  },
-  inputFocused: {
-    borderColor: "#737373",
-    outlineColor: "#737373",
-  },
-  errorText: {
-    color: "red",
   },
 });
 

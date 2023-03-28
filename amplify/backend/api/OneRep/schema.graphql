@@ -1,6 +1,21 @@
+type Entry @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  entered: Int
+  date: AWSDateTime
+  exerciseID: ID! @index(name: "byExercise")
+}
+
 type Exercise @model @auth(rules: [{allow: public}]) {
   id: ID!
-  name: String
+  usersID: ID! @index(name: "byUsers")
+  title: String
   total: Int
+  Entries: [Entry] @hasMany(indexName: "byExercise", fields: ["id"])
+}
+
+type Users @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  name: String
+  Exercises: [Exercise] @hasMany(indexName: "byUsers", fields: ["id"])
 }
  

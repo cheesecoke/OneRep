@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, SafeAreaView, LogBox, Text } from "react-native";
+import { StyleSheet, SafeAreaView, LogBox, Button } from "react-native";
 import {
   HomeScreen,
   ExercisesScreen,
@@ -8,36 +8,50 @@ import {
 } from "./src/pages";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { Amplify } from "aws-amplify";
-import awsconfig from "./src/aws-exports";
-Amplify.configure(awsconfig);
-
-// Remove - import globalStyle from "./src/styles/global";
 const Stack = createNativeStackNavigator();
 LogBox.ignoreLogs(["Require cycle: node_modules/victory"]);
 
+//AWS Amplify
+import awsconfig from "./src/aws-exports";
+import { Amplify, Auth } from "aws-amplify";
+import { Authenticator, useAuthenticator } from "@aws-amplify/ui-react-native";
+Amplify.configure(awsconfig);
+
+// Remove - import globalStyle from "./src/styles/global";
 import data from "./src/api/data.json";
 const exercises = data.users[1].exercises;
 
+function SignOutButton() {
+  const { signOut } = useAuthenticator();
+  return <Button title="Sign Out" onPress={signOut} />;
+}
+
 const App = () => {
   return (
-    <SafeAreaView style={styles.container}>
-      <NavigationContainer>
-        <Stack.Navigator initialRouteName="Home">
-          <Stack.Screen name="Home">
-            {(props) => <HomeScreen {...props} exercises={exercises} />}
-          </Stack.Screen>
-          <Stack.Screen name="Exercises">
-            {(props) => <ExercisesScreen {...props} exercises={exercises} />}
-          </Stack.Screen>
-          <Stack.Screen name="Exercise">
-            {(props) => <ExerciseScreen {...props} />}
-          </Stack.Screen>
-          <Stack.Screen name="Login" component={LoginScreen} />
-        </Stack.Navigator>
-      </NavigationContainer>
-      <StatusBar style="auto" />
-    </SafeAreaView>
+    <Authenticator.Provider>
+      <Authenticator initialState="signUp">
+        <SignOutButton />
+        <SafeAreaView style={styles.container}>
+          <NavigationContainer>
+            <Stack.Navigator initialRouteName="Home">
+              <Stack.Screen name="Home">
+                {(props) => <HomeScreen {...props} exercises={exercises} />}
+              </Stack.Screen>
+              <Stack.Screen name="Exercises">
+                {(props) => (
+                  <ExercisesScreen {...props} exercises={exercises} />
+                )}
+              </Stack.Screen>
+              <Stack.Screen name="Exercise">
+                {(props) => <ExerciseScreen {...props} />}
+              </Stack.Screen>
+              <Stack.Screen name="Login" component={LoginScreen} />
+            </Stack.Navigator>
+          </NavigationContainer>
+          <StatusBar style="auto" />
+        </SafeAreaView>
+      </Authenticator>
+    </Authenticator.Provider>
   );
 };
 
@@ -55,5 +69,4 @@ const styles = StyleSheet.create({
 // User page
 // Settings
 
-// export default withAuthenticator(App);
 export default App;

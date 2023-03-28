@@ -1,5 +1,12 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, SafeAreaView, LogBox, Button } from "react-native";
+import {
+  StyleSheet,
+  SafeAreaView,
+  LogBox,
+  Button,
+  View,
+  Text,
+} from "react-native";
 import {
   HomeScreen,
   ExercisesScreen,
@@ -30,11 +37,13 @@ const App = () => {
   return (
     <Authenticator.Provider>
       <Authenticator initialState="signUp">
-        <SignOutButton />
         <SafeAreaView style={styles.container}>
           <NavigationContainer>
             <Stack.Navigator initialRouteName="Home">
-              <Stack.Screen name="Home">
+              <Stack.Screen
+                name="Home"
+                options={{ headerRight: () => <SignOutButton /> }}
+              >
                 {(props) => <HomeScreen {...props} exercises={exercises} />}
               </Stack.Screen>
               <Stack.Screen name="Exercises">

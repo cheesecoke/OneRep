@@ -50,12 +50,14 @@ const ExercisesItem = ({
         <Text>{itemIndex + 1}</Text>
       </View>
       <Text style={styles.itemText}>{item.item}</Text>
+      <Text style={styles.italic}> - {exercises[itemIndex].total}</Text>
       <Icon name="chevron-right" size={32} style={styles.icon} />
     </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
+  italic: { fontStyle: "italic" },
   itemText: {
     fontSize: 16,
     marginLeft: 20,

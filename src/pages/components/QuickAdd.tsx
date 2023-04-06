@@ -23,10 +23,10 @@ const QuickAdd = ({ exercises = [] }: PropTypes) => {
     return null;
   }
 
-  const handleSubmit = (input) => {
+  const handleSubmit = (userInput) => {
     let newTotal;
 
-    if (!(input > 0)) {
+    if (!(userInput > 0)) {
       Alert.alert(
         "Invalid Input",
         "Please enter a number greater than 0 for at least one exercise"
@@ -34,10 +34,10 @@ const QuickAdd = ({ exercises = [] }: PropTypes) => {
       return;
     }
 
-    if (input > 0 && exercises && exercises[activeIndex]) {
-      newTotal = exercises[activeIndex].total + parseInt(input, 10);
+    if (userInput > 0 && exercises && exercises[activeIndex]) {
+      newTotal = exercises[activeIndex].total + parseInt(userInput, 10);
       setInput("");
-      handleUpdateExercise(newTotal, activeIndex, exercises);
+      handleUpdateExercise(newTotal, activeIndex, exercises, userInput);
     }
   };
 

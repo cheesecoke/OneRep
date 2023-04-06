@@ -11,13 +11,13 @@ LogBox.ignoreLogs(["Require cycle: node_modules/victory"]);
 import awsconfig from "./src/aws-exports";
 import { Amplify } from "aws-amplify";
 import { Authenticator, useAuthenticator } from "@aws-amplify/ui-react-native";
-Amplify.configure(awsconfig);
 import { defaultData } from "./src/api/defaultData";
 import {
   getUserName,
   fetchItems,
   subscribeToUpdateExercise,
 } from "./src/api/functions";
+Amplify.configure(awsconfig);
 
 function SignOutButton() {
   const { signOut } = useAuthenticator();
@@ -61,9 +61,9 @@ const App = () => {
                   <ExercisesScreen {...props} exercises={exercises} />
                 )}
               </Stack.Screen>
-              {/* <Stack.Screen name="Exercise">
+              <Stack.Screen name="Exercise">
                 {(props) => <ExerciseScreen {...props} />}
-              </Stack.Screen> */}
+              </Stack.Screen>
             </Stack.Navigator>
           </NavigationContainer>
           <StatusBar style="auto" />

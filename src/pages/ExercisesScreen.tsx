@@ -15,7 +15,10 @@ const ExercisesScreen = ({ navigation, exercises }: ExercisesScreenTypes) => {
     return (
       <ExercisesItem
         item={item}
-        onPress={() => navigation.navigate("Exercise", exercises[item.index])}
+        onPress={() =>
+          navigation.navigate("Exercise", { exercise: exercises[item.index] })
+        }
+        // onPress={() => navigation.navigate("Exercise", exercises[item.index])}
         itemIndex={item.index}
         exercises={exercises}
       />
@@ -24,7 +27,7 @@ const ExercisesScreen = ({ navigation, exercises }: ExercisesScreenTypes) => {
 
   return (
     <View style={styles.container}>
-      <SectionHeading>This Month</SectionHeading>
+      <SectionHeading>Exercise Totals</SectionHeading>
       <VirtualizedList
         ListHeaderComponent={
           <Chart

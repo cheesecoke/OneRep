@@ -2,8 +2,12 @@ import { API, Auth, graphqlOperation } from "aws-amplify";
 import * as queries from "../graphql/queries";
 import * as mutations from "../graphql/mutations";
 import { onUpdateExercise } from "../graphql/subscriptions";
-import { OnUpdateExerciseSubscription } from "../API";
-import { GraphQLSubscription } from "@aws-amplify/api";
+import {
+  CreateEntryMutation,
+  CreateEntryInput,
+  OnUpdateExerciseSubscription,
+} from "../API";
+import { GraphQLSubscription, GraphQLQuery } from "@aws-amplify/api";
 
 export const getUserName = async (setUserName: Function) => {
   try {
@@ -64,7 +68,8 @@ export const subscribeToUpdateExercise = (setExercises: Function) => {
 export const handleUpdateExercise = async (
   newTotal: number,
   index: number,
-  exercises
+  exercises,
+  userInput: string
 ) => {
   const newExercise = {
     id: exercises[index].id,
@@ -73,8 +78,17 @@ export const handleUpdateExercise = async (
     _version: exercises[index]._version,
   };
 
+  const entryDetails: CreateEntryInput = {
+    entered: parseInt(userInput),
+    exerciseID: exercises[index].id,
+  };
+
   try {
-    return await API.graphql(
+    await API.graphql<GraphQLQuery<CreateEntryMutation>>(
+      graphqlOperation(mutations.createEntry, { input: entryDetails })
+    );
+
+    await API.graphql(
       graphqlOperation(mutations.updateExercise, {
         input: newExercise,
       })

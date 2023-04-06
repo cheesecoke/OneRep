@@ -33,14 +33,12 @@ interface PropTypes {
 
 const ExerciseScreen = ({ navigation, route }: PropTypes) => {
   // Get exercise based on param.
-  const { params } = route;
+  const {
+    params: { exercise },
+  } = route;
+  console.log({ exercise });
   // const { highest, lowest } = getDomainForChart(exercise);
-
-  // const values = params.entries.map((entry: { entered: any; date: any }) => ({
-  //   entered: entry.entered,
-  //   date: entry.date,
-  // }));
-  const { highest, lowest } = getDomainForChart(params.entries, "entered");
+  // const { highest, lowest } = getDomainForChart(params.entries, "entered");
 
   // console.log("----");
   // console.log(" Exercise ");
@@ -79,8 +77,8 @@ const ExerciseScreen = ({ navigation, route }: PropTypes) => {
 
   return (
     <View style={styles.container}>
-      <SectionHeading>{params.title}</SectionHeading>
-      <Chart
+      <SectionHeading>{exercise.title}</SectionHeading>
+      {/* <Chart
         navigation={navigation}
         data={params.entries} // data
         highest={highest}
@@ -88,7 +86,7 @@ const ExerciseScreen = ({ navigation, route }: PropTypes) => {
         xValue="date"
         yValue="entered"
         // horizontal
-      />
+      /> */}
       {/* <VirtualizedList
         data={exercise}
         renderItem={(exercise) => renderItem(exercise)}

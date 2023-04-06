@@ -1,18 +1,7 @@
+import { useEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
-import {
-  StyleSheet,
-  SafeAreaView,
-  LogBox,
-  Button,
-  View,
-  Text,
-} from "react-native";
-import {
-  HomeScreen,
-  ExercisesScreen,
-  ExerciseScreen,
-  LoginScreen,
-} from "./src/pages";
+import { StyleSheet, SafeAreaView, LogBox, Button } from "react-native";
+import { HomeScreen, ExercisesScreen, ExerciseScreen } from "./src/pages";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 const Stack = createNativeStackNavigator();
@@ -20,13 +9,15 @@ LogBox.ignoreLogs(["Require cycle: node_modules/victory"]);
 
 //AWS Amplify
 import awsconfig from "./src/aws-exports";
-import { Amplify, Auth } from "aws-amplify";
+import { Amplify } from "aws-amplify";
 import { Authenticator, useAuthenticator } from "@aws-amplify/ui-react-native";
 Amplify.configure(awsconfig);
-
-// Remove - import globalStyle from "./src/styles/global";
-import data from "./src/api/data.json";
-const exercises = data.users[1].exercises;
+import { defaultData } from "./src/api/defaultData";
+import {
+  getUserName,
+  fetchItems,
+  subscribeToUpdateExercise,
+} from "./src/api/functions";
 
 function SignOutButton() {
   const { signOut } = useAuthenticator();
@@ -34,9 +25,22 @@ function SignOutButton() {
 }
 
 const App = () => {
+  const [userName, setUserName] = useState("");
+  const [exercises, setExercises] = useState(defaultData);
+
+  useEffect(() => {
+    getUserName(setUserName);
+    fetchItems(setExercises);
+    const subscription = subscribeToUpdateExercise(setExercises);
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
+
   return (
     <Authenticator.Provider>
-      <Authenticator initialState="signUp">
+      <Authenticator>
         <SafeAreaView style={styles.container}>
           <NavigationContainer>
             <Stack.Navigator initialRouteName="Home">
@@ -44,17 +48,22 @@ const App = () => {
                 name="Home"
                 options={{ headerRight: () => <SignOutButton /> }}
               >
-                {(props) => <HomeScreen {...props} exercises={exercises} />}
+                {(props) => (
+                  <HomeScreen
+                    {...props}
+                    userName={userName}
+                    exercises={exercises}
+                  />
+                )}
               </Stack.Screen>
               <Stack.Screen name="Exercises">
                 {(props) => (
                   <ExercisesScreen {...props} exercises={exercises} />
                 )}
               </Stack.Screen>
-              <Stack.Screen name="Exercise">
+              {/* <Stack.Screen name="Exercise">
                 {(props) => <ExerciseScreen {...props} />}
-              </Stack.Screen>
-              <Stack.Screen name="Login" component={LoginScreen} />
+              </Stack.Screen> */}
             </Stack.Navigator>
           </NavigationContainer>
           <StatusBar style="auto" />
@@ -69,13 +78,5 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 });
-
-//TODO:
-// User db
-// Login
-// Privacy Policy
-// Logo
-// User page
-// Settings
 
 export default App;

@@ -1,44 +1,25 @@
-import React, { useEffect, useState } from "react";
-import { View, StyleSheet, ScrollView } from "react-native";
+import React from "react";
+import { StyleSheet, ScrollView } from "react-native";
 import { SectionHeading, QuickAdd, Chart } from "./components";
 import { getDomainForChart } from "../utils/getChartDomain";
 import { ExercisesType, NavigationType } from "../Types";
-import { DataStore } from "aws-amplify";
-import { Exercise } from "../models";
-
-// remove
-import data from "../api/data.json";
-const getMonth = new Date().getMonth();
-const month = data.month[getMonth];
 
 interface PropTypes {
   exercises: ExercisesType;
   navigation: NavigationType;
   month: String;
+  userName: String;
 }
 
-const HomeScreen = ({ navigation, exercises }: PropTypes) => {
-  // const [user, setUser] = useState([]);
+const HomeScreen = ({ navigation, exercises, userName }: PropTypes) => {
   const topFour = exercises.slice(0, 4) as ExercisesType;
   const { highest, lowest } = getDomainForChart(exercises, "total");
 
-  // useEffect(() => {
-  //   //to be filled in a later step
-  // }, []);
-
-  // async function deleteTodo(user) {
-  //   //to be filled in a later step
-  // }
-
-  // async function setComplete(updateValue, user) {
-  //   //to be filled in a later step
-  // }
-
   return (
     <ScrollView style={styles.container}>
-      <SectionHeading>Quick Add</SectionHeading>
+      <SectionHeading>Welcome {userName}!</SectionHeading>
       <QuickAdd exercises={exercises} />
-      <SectionHeading>Top of {month}</SectionHeading>
+      <SectionHeading>Top Four Exercises</SectionHeading>
       <Chart
         navigation={navigation}
         data={topFour}

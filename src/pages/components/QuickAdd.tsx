@@ -8,35 +8,24 @@ import {
   Alert,
 } from "react-native";
 import { Carousel } from ".";
-// Dummy Data
-import data from "../../api/data.json";
-const getMonth = new Date().getMonth();
-const month = data.month[getMonth];
+import { ExercisesType } from "../../Types";
+import { handleUpdateExercise } from "../../api/functions";
 
-interface Exercises {
-  map(arg0: (exercise: { total: Number }) => Number): unknown;
-  slice(arg0: number, arg1: number): unknown;
-  exercise: { title: string; total: keyof typeof Number };
+interface PropTypes {
+  exercises?: ExercisesType;
 }
 
-interface PropType {
-  exercises: Exercises;
-  month: String;
-}
-
-const QuickAdd = ({ exercises }: PropType) => {
+const QuickAdd = ({ exercises = [] }: PropTypes) => {
   const [activeIndex, setActiveIndex] = useState(0);
-  // const [error, setError] = useState(false);
-  const { title, total } = exercises[activeIndex];
   const [input, setInput] = useState("");
-  const [history, setHistory] = useState("");
-  const [newTotal, setNewTotal] = useState(total);
+
+  if (!exercises || exercises.length === 0) {
+    return null;
+  }
 
   const handleSubmit = (input) => {
-    let newInput, newTotal;
-    const currentDate = new Date();
+    let newTotal;
 
-    // Check if input field has a valid value
     if (!(input > 0)) {
       Alert.alert(
         "Invalid Input",
@@ -45,29 +34,12 @@ const QuickAdd = ({ exercises }: PropType) => {
       return;
     }
 
-    // "entries": [
-    //   { "entered": 66, "date": "11/08/2022" },
-    //   { "entered": 10, "date": "11/08/2022" },
-    //   { "entered": 5, "date": "11/08/2022" }
-    // ]
-
-    // Push entry
-    // Add to total, push
-    console.log(typeof input);
-    if (input > 0) {
-      newInput = { entered: input, date: currentDate };
-      newTotal = total + parseInt(input, 10);
+    if (input > 0 && exercises && exercises[activeIndex]) {
+      newTotal = exercises[activeIndex].total + parseInt(input, 10);
       setInput("");
+      handleUpdateExercise(newTotal, activeIndex, exercises);
     }
-
-    setHistory(newInput);
-    //push to db
-    setNewTotal(newTotal);
-    //push to db
   };
-
-  console.log({ history });
-  console.log({ newTotal });
 
   return (
     <>
@@ -85,9 +57,11 @@ const QuickAdd = ({ exercises }: PropType) => {
           value={input}
         />
 
-        <Text style={[styles.subText, styles.total]}>
-          Total {title} for {month}: {total}
-        </Text>
+        {exercises && exercises[activeIndex] ? (
+          <Text style={[styles.subText, styles.total]}>
+            Total {exercises[activeIndex].title}: {exercises[activeIndex].total}
+          </Text>
+        ) : null}
 
         <TouchableOpacity
           style={styles.button}

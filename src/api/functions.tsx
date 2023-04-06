@@ -99,3 +99,35 @@ export const handleUpdateExercise = async (
     return;
   }
 };
+
+// Filter entries based on exerciseID
+export const listEntriesByExerciseID = async (
+  exerciseID: string,
+  limit?: number
+) => {
+  try {
+    const result = await API.graphql(
+      graphqlOperation(
+        `
+      query ListEntriesByExerciseID($exerciseID: ID!) {
+        listEntries(
+          filter: { exerciseID: { eq: $exerciseID } },
+        ) {
+          items {
+            id
+            exerciseID
+            entered
+            createdAt
+          }
+        }
+      }
+    `,
+        { exerciseID, limit }
+      )
+    );
+    return result.data.listEntries.items;
+  } catch (error) {
+    console.error("Error fetching entries by exercise ID", error);
+    return null;
+  }
+};

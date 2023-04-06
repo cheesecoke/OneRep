@@ -18,7 +18,6 @@ const ExercisesScreen = ({ navigation, exercises }: ExercisesScreenTypes) => {
         onPress={() =>
           navigation.navigate("Exercise", { exercise: exercises[item.index] })
         }
-        // onPress={() => navigation.navigate("Exercise", exercises[item.index])}
         itemIndex={item.index}
         exercises={exercises}
       />

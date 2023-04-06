@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   StyleSheet,
@@ -9,6 +9,8 @@ import {
 import { getDomainForChart } from "../utils/getChartDomain";
 import { Chart, SectionHeading } from "./components";
 import { ExerciseType, NavigationType } from "../Types";
+import { listEntriesByExerciseID } from "../api/functions";
+// import { getEntries } from "../api/functions";
 
 interface ItemType {
   index: number;
@@ -32,20 +34,25 @@ interface PropTypes {
 }
 
 const ExerciseScreen = ({ navigation, route }: PropTypes) => {
+  const [entries, setEntries] = useState([]);
+
   // Get exercise based on param.
   const {
     params: { exercise },
   } = route;
-  console.log({ exercise });
+
+  useEffect(() => {
+    const fetchEntries = async () => {
+      const result = await listEntriesByExerciseID(exercise.id);
+      setEntries(result || []);
+    };
+    fetchEntries();
+  }, [exercise.id]);
+
+  console.log("Current id:", exercise.id);
+  console.log({ entries });
   // const { highest, lowest } = getDomainForChart(exercise);
   // const { highest, lowest } = getDomainForChart(params.entries, "entered");
-
-  // console.log("----");
-  // console.log(" Exercise ");
-  // console.log("entrires", params.entries);
-  // console.log(new Date());
-  // console.log({ highest }, { lowest });
-  // console.log("----");
 
   // const Item = ({ item, onPress, itemIndex }: ItemComponentType) => {
   //   // const lastItem = exercises[exercises.length - 1].title;
@@ -87,7 +94,14 @@ const ExerciseScreen = ({ navigation, route }: PropTypes) => {
         yValue="entered"
         // horizontal
       /> */}
-      {/* <VirtualizedList
+      {/* IF NULL HANDLE UI */}
+
+      {entries.length > 0 ? (
+        entries.map((entry) => {
+          console.log();
+          return (
+            <>
+              {/* <VirtualizedList
         data={exercise}
         renderItem={(exercise) => renderItem(exercise)}
         keyExtractor={(item: ItemType) => item.title}
@@ -97,6 +111,15 @@ const ExerciseScreen = ({ navigation, route }: PropTypes) => {
           entries: exercise[index].entries,
         })}
       /> */}
+              <Text>
+                Entered: {entry.entered} Date: {entry.createdAt}
+              </Text>
+            </>
+          );
+        })
+      ) : (
+        <Text>No Entries</Text>
+      )}
     </View>
   );
 };

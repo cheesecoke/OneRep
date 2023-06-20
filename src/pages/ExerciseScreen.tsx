@@ -7,10 +7,15 @@ import {
   Text,
 } from "react-native";
 import { getDomainForChart } from "../utils/getChartDomain";
-import { Chart, SectionHeading } from "./components";
+import {
+  Chart,
+  EntryListItem,
+  SectionHeading,
+  SlidingListItem,
+} from "./components";
 import { ExerciseType, NavigationType } from "../Types";
 import { listEntriesByExerciseID } from "../api/functions";
-// import { getEntries } from "../api/functions";
+import { formatDate } from "../utils/formatDate";
 
 interface ItemType {
   index: number;
@@ -35,88 +40,80 @@ interface PropTypes {
 
 const ExerciseScreen = ({ navigation, route }: PropTypes) => {
   const [entries, setEntries] = useState([]);
-
-  // Get exercise based on param.
   const {
     params: { exercise },
   } = route;
+  const { highest, lowest } = getDomainForChart(entries, "entered");
+  const tickValues = entries.map((i) => i.day);
 
   useEffect(() => {
     const fetchEntries = async () => {
       const result = await listEntriesByExerciseID(exercise.id);
-      setEntries(result || []);
+      const formattedData = result.map((entry) => {
+        const dateObj = new Date(entry.createdAt);
+        const day = dateObj.getDate();
+        return { ...entry, date: `${formatDate(entry.createdAt)}`, day: day };
+      });
+      setEntries(formattedData || []);
     };
     fetchEntries();
   }, [exercise.id]);
 
-  console.log("Current id:", exercise.id);
-  console.log({ entries });
-  // const { highest, lowest } = getDomainForChart(exercise);
-  // const { highest, lowest } = getDomainForChart(params.entries, "entered");
+  const renderItem = (itemObj) => {
+    const { item } = itemObj;
+    return (
+      <SlidingListItem item={item} onDelete={() => console.log("delete")} />
+    );
+  };
 
-  // const Item = ({ item, onPress, itemIndex }: ItemComponentType) => {
-  //   // const lastItem = exercises[exercises.length - 1].title;
-  //   // const firstItem = exercises[0].title;
-  //   console.log("Item:", item);
-  //   // const getEntries = item.entries.map((entry) => (
-  //   //   <View style={styles.itemContainer}>
-  //   //     <View>{entry.entered}</View>
-  //   //     <View>{entry.date}</View>
-  //   //     <View>MENU</View>
-  //   //   </View>
-  //   // ));
-
-  //   return <TouchableOpacity onPress={onPress}></TouchableOpacity>;
-  // };
-
-  // const renderItem = (item: ItemType) => {
-  //   return (
-  //     <Item
+  // <SlidingListItem
   //       item={item}
-  //       onPress={
-  //         () => navigation.push("Exercise", item.item)
-  //         // TODO: menu: update, delete
-  //       }
-  //       itemIndex={item.index}
-  //     />
-  //   );
-  // };
+  //       onDelete={() => console.log("delete")}
+  //       onEdit={() => console.log("onEdit")}
+  //     >
+  //       <View>
+  //         <Text>HERE</Text>
+  //       </View>
+  //     </SlidingListItem>
+
+  {
+    /*  <EntryListItem
+          item={item}
+          onPress={() => navigation.navigate("")}
+          itemIndex={item.index}
+          entries={entries}
+        />*/
+  }
 
   return (
     <View style={styles.container}>
       <SectionHeading>{exercise.title}</SectionHeading>
-      {/* <Chart
-        navigation={navigation}
-        data={params.entries} // data
-        highest={highest}
-        lowest={lowest}
-        xValue="date"
-        yValue="entered"
-        // horizontal
-      /> */}
-      {/* IF NULL HANDLE UI */}
-
       {entries.length > 0 ? (
-        entries.map((entry) => {
-          console.log();
-          return (
-            <>
-              {/* <VirtualizedList
-        data={exercise}
-        renderItem={(exercise) => renderItem(exercise)}
-        keyExtractor={(item: ItemType) => item.title}
-        getItemCount={(exercise) => exercise.length}
-        getItem={(exercise, index) => ({
-          title: exercise[index].title,
-          entries: exercise[index].entries,
-        })}
-      /> */}
-              <Text>
-                Entered: {entry.entered} Date: {entry.createdAt}
-              </Text>
-            </>
-          );
-        })
+        <VirtualizedList
+          ListHeaderComponent={
+            <Chart
+              navigation={navigation}
+              data={entries}
+              highest={highest < 0 ? 10 : highest}
+              lowest={entries.length === 1 || lowest < 0 ? 0 : lowest}
+              xValue="day"
+              yValue="entered"
+              tickValues={
+                tickValues.length === 1 ? [1, ...tickValues] : tickValues
+              }
+            />
+          }
+          data={entries}
+          renderItem={(entry) => renderItem(entry)}
+          keyExtractor={(item: ItemType) => item.id}
+          getItemCount={(entries) => entries.length}
+          getItem={(entry, index) => ({
+            index: index,
+            id: entry[index].id,
+            entered: entry[index].entered,
+            date: formatDate(entry[index].createdAt),
+          })}
+        />
       ) : (
         <Text>No Entries</Text>
       )}

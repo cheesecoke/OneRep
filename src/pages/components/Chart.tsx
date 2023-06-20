@@ -18,6 +18,7 @@ interface PropTypes {
   horizontal?: boolean;
   xValue: string | number;
   yValue: string | number;
+  tickValues?: Array | Object;
 }
 
 const Chart = ({
@@ -30,6 +31,7 @@ const Chart = ({
   horizontal,
   xValue,
   yValue,
+  tickValues,
 }: PropTypes) => {
   return (
     <TouchableOpacity
@@ -47,10 +49,11 @@ const Chart = ({
           onLoad: { duration: 500 },
         }}
         theme={VictoryTheme.material}
-        domainPadding={30}
+        domainPadding={{ x: [20, 30] }}
         domain={{
           y: [lowest, highest == 0 ? 10 : highest],
         }}
+        chartConfig={{ decimalPlaces: 0 }}
         horizontal={horizontal}
       >
         <VictoryAxis
@@ -64,9 +67,10 @@ const Chart = ({
           crossAxis
           offsetY={49}
           style={{ grid: { stroke: "#BAE6FD" } }}
+          tickValues={tickValues}
         />
         <VictoryBar
-          style={{ data: { fill: "#FED7AA", width: 32 } }}
+          style={{ data: { fill: "#FED7AA", width: 20 } }}
           data={data}
           x={xValue}
           y={yValue}

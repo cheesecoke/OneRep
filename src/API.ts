@@ -17,6 +17,7 @@ export type ModelEntryConditionInput = {
   and?: Array< ModelEntryConditionInput | null > | null,
   or?: Array< ModelEntryConditionInput | null > | null,
   not?: ModelEntryConditionInput | null,
+  _deleted?: ModelBooleanInput | null,
 };
 
 export type ModelIntInput = {
@@ -87,6 +88,13 @@ export type ModelIDInput = {
   size?: ModelSizeInput | null,
 };
 
+export type ModelBooleanInput = {
+  ne?: boolean | null,
+  eq?: boolean | null,
+  attributeExists?: boolean | null,
+  attributeType?: ModelAttributeTypes | null,
+};
+
 export type Entry = {
   __typename: "Entry",
   id: string,
@@ -126,6 +134,7 @@ export type ModelExerciseConditionInput = {
   and?: Array< ModelExerciseConditionInput | null > | null,
   or?: Array< ModelExerciseConditionInput | null > | null,
   not?: ModelExerciseConditionInput | null,
+  _deleted?: ModelBooleanInput | null,
 };
 
 export type Exercise = {
@@ -168,6 +177,7 @@ export type ModelEntryFilterInput = {
   and?: Array< ModelEntryFilterInput | null > | null,
   or?: Array< ModelEntryFilterInput | null > | null,
   not?: ModelEntryFilterInput | null,
+  _deleted?: ModelBooleanInput | null,
 };
 
 export enum ModelSortDirection {
@@ -183,6 +193,7 @@ export type ModelExerciseFilterInput = {
   and?: Array< ModelExerciseFilterInput | null > | null,
   or?: Array< ModelExerciseFilterInput | null > | null,
   not?: ModelExerciseFilterInput | null,
+  _deleted?: ModelBooleanInput | null,
 };
 
 export type ModelExerciseConnection = {
@@ -199,6 +210,7 @@ export type ModelSubscriptionEntryFilterInput = {
   exerciseID?: ModelSubscriptionIDInput | null,
   and?: Array< ModelSubscriptionEntryFilterInput | null > | null,
   or?: Array< ModelSubscriptionEntryFilterInput | null > | null,
+  _deleted?: ModelBooleanInput | null,
 };
 
 export type ModelSubscriptionIDInput = {
@@ -249,6 +261,7 @@ export type ModelSubscriptionExerciseFilterInput = {
   total?: ModelSubscriptionIntInput | null,
   and?: Array< ModelSubscriptionExerciseFilterInput | null > | null,
   or?: Array< ModelSubscriptionExerciseFilterInput | null > | null,
+  _deleted?: ModelBooleanInput | null,
 };
 
 export type CreateEntryMutationVariables = {

@@ -2,5 +2,6 @@
   "AppSyncApiName": "OneRep",
   "DynamoDBBillingMode": "PAY_PER_REQUEST",
   "DynamoDBEnableServerSideEncryption": false,
-  "AuthModeLastUpdated": "2023-01-12T04:53:28.807Z"
+  "AuthModeLastUpdated": "2023-10-19T02:29:41.036Z",
+  "CreateAPIKey": 1
 }

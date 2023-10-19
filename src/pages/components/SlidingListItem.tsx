@@ -1,3 +1,4 @@
+// import { Icon } from "@aws-amplify/ui-react-native/dist/primitives";
 import React, { useState, useRef } from "react";
 import {
   View,
@@ -6,6 +7,7 @@ import {
   Animated,
   StyleSheet,
 } from "react-native";
+import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 
 const deleteButtonWidth = 85;
 
@@ -47,8 +49,11 @@ const SlidingListItem = ({ item, onDelete }) => {
           onPress={handleItemPress}
           activeOpacity={isOpen ? 1 : 0.8}
         >
-          <Text style={styles.itemText}>{item.entered}</Text>
+          <Text style={styles.itemText}>
+            {item.entered} {item.entered > 1 ? "reps" : "rep"}
+          </Text>
           <Text style={styles.itemText}>{item.date}</Text>
+          <Icon name="drag-vertical" size={32} />
         </TouchableOpacity>
       </Animated.View>
 
@@ -71,11 +76,14 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     borderRadius: 8,
     zIndex: 2,
+    cursor: "pointer",
   },
   itemContent: {
     flex: 1,
     flexDirection: "row",
     padding: 16,
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   itemText: {
     marginLeft: 20,

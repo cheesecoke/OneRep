@@ -66,25 +66,6 @@ const ExerciseScreen = ({ navigation, route }: PropTypes) => {
     );
   };
 
-  // <SlidingListItem
-  //       item={item}
-  //       onDelete={() => console.log("delete")}
-  //       onEdit={() => console.log("onEdit")}
-  //     >
-  //       <View>
-  //         <Text>HERE</Text>
-  //       </View>
-  //     </SlidingListItem>
-
-  {
-    /*  <EntryListItem
-          item={item}
-          onPress={() => navigation.navigate("")}
-          itemIndex={item.index}
-          entries={entries}
-        />*/
-  }
-
   return (
     <View style={styles.container}>
       <SectionHeading>{exercise.title}</SectionHeading>
@@ -115,7 +96,7 @@ const ExerciseScreen = ({ navigation, route }: PropTypes) => {
           })}
         />
       ) : (
-        <Text>No Entries</Text>
+        <Text>Loading</Text>
       )}
     </View>
   );
